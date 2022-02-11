@@ -4,41 +4,39 @@ import java.sql.*;
 import java.util.ArrayList;
 
 
-public class App
-{
-    public static void main(String[] args)
-    {
+public class App{
+
+    public static void main(String[] args){
         // Create new Application
         App a = new App();
 
-        // Connect to database
+        /** Connect to database */
         a.connect();
 
-        // Extract employee salary information for all employees
-        /* ArrayList<Employee> employees = a.getAllSalaries(); */
+        /** Extract employee salary information for all employees */
+        // ArrayList<Employee> employees = a.getAllSalaries();
 
-        // Extract employee salary information based on role
-        ArrayList<Employee> employees = a.getSalariesByRole();
+        /** Extract employee salary information based on role */
+        //ArrayList<Employee> employees = a.getSalariesByRole();
 
-        // Test the size of the returned data - should be 240124
-       //System.out.println(employees.size());
+         /** Test the size of the returned data - should be 240124 */
+         //System.out.println(employees.size());
 
-        // Print all salaries for every employee
-        a.printSalaries(employees);
+         /** Print all salaries for every employee */
+         //a.printSalaries(employees);
 
-        // Disconnect from database
-        a.disconnect();
+        getDepartment("Sales");
+        //displayDepartment(dep);
+
+
+         /** Disconnect from database */
+         a.disconnect();
     }
-    /**
-     * Connection to MySQL database.
-     */
+    /** Connection to MySQL database. */
     private Connection con = null;
 
-    /**
-     * Connect to the MySQL database.
-     */
-    public void connect()
-    {
+    /** Connect to the MySQL database. */
+    public void connect() {
         try
         {
             // Load Database driver
@@ -75,11 +73,8 @@ public class App
         }
     }
 
-    /**
-     * Disconnect from the MySQL database.
-     */
-    public void disconnect()
-    {
+    /** Disconnect from the MySQL database. */
+    public void disconnect() {
         if (con != null)
         {
             try
@@ -94,8 +89,8 @@ public class App
         }
     }
 
-    public Employee getEmployee(int ID)
-    {
+    /** Get Employee. */
+    public Employee getEmployee(int ID){
         try
         {
             // Create an SQL statement
@@ -128,8 +123,8 @@ public class App
         }
     }
 
-    public void displayEmployee(Employee emp)
-    {
+    /** Display employee. */
+    public void displayEmployee(Employee emp){
         if (emp != null)
         {
             System.out.println(
@@ -147,10 +142,8 @@ public class App
      * Gets all the current employees and salaries.
      * @return A list of all employees and salaries, or null if there is an error.
      */
-    public ArrayList<Employee> getAllSalaries()
-    {
-        try
-        {
+    public ArrayList<Employee> getAllSalaries(){
+        try {
             // Create an SQL statement
             Statement stmt = con.createStatement();
             // Create string for SQL statement
@@ -186,8 +179,7 @@ public class App
      * Prints a list of employees.
      * @param employees The list of employees to print.
      */
-    public void printSalaries(ArrayList<Employee> employees)
-    {
+    public void printSalaries(ArrayList<Employee> employees){
         // Print header
         System.out.println(String.format("%-10s %-15s %-20s %-8s", "Emp No", "First Name", "Last Name", "Salary"));
         // Loop over all employees in the list
@@ -205,8 +197,7 @@ public class App
      * Gets employees based on roles.
      * @return A list of employees and salaries based on roles, or null if there is an error.
      */
-    public ArrayList<Employee> getSalariesByRole()
-    {
+    public ArrayList<Employee> getSalariesByRole(){
         try
         {
             // Create an SQL statement
@@ -247,10 +238,7 @@ public class App
     }
 
 
-    /**
-     * Gets employees based on department.
-     * @return A list of employees and salaries based on roles, or null if there is an error.
-     */
+    /** Gets employees based on department. */
     public Department getDepartment(String dept_name){
         try
         {
@@ -267,18 +255,19 @@ public class App
                     + "AND departments.dept_no = '<dept_no>' "
                     + "ORDER BY employees.emp_no ASC ";
 
-
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Return new employee if valid.
             // Check one is returned
             if (rset.next())
             {
+                Department dep = new Department();
                 Employee emp = new Employee();
                 emp.emp_no = rset.getInt("emp_no");
                 emp.first_name = rset.getString("first_name");
                 emp.last_name = rset.getString("last_name");
-                return emp;
+                emp.salary = rset.getInt("salary");
+                return dep;
             }
             else
                 return null;
@@ -286,8 +275,19 @@ public class App
         catch (Exception e)
         {
             System.out.println(e.getMessage());
-            System.out.println("Failed to get employee details");
+            System.out.println("Failed to get department details ");
             return null;
+        }
+    }
+
+    /** Display department. */
+    public void displayDepartment(Department dep){
+        if (dep != null){
+            System.out.println(
+                    emp.emp_no + " "
+                            + emp.first_name + " "
+                            + emp.last_name + "\n"
+                            + emp.salary + "\n");
         }
     }
 
@@ -297,15 +297,20 @@ public class App
      * @return A list of employees and salaries based on roles, or null if there is an error.
      */
     public ArrayList<Employee> getSalariesByDepartment(Department dept) {
-        try
-        {
+        try{
             // Create an SQL statement
             Statement stmt = con.createStatement();
             // Create string for SQL statement
             String strSelect =
-                    "SELECT emp_no, first_name, last_name "
-                            + "FROM employees "
-                            + "WHERE emp_no = " + ID;
+                 "SELECT employees.emp_no, employees.first_name, employees.last_name, salaries.salary "
+                    + "FROM employees, salaries, dept_emp, departments "
+                    + "WHERE employees.emp_no = salaries.emp_no "
+                    + "AND employees.emp_no = dept_emp.emp_no "
+                    + "AND dept_emp.dept_no = departments.dept_no "
+                    + "AND salaries.to_date = '9999-01-01' "
+                    + "AND departments.dept_no = '<dept_no>' "
+                    + "ORDER BY employees.emp_no ASC";
+
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Return new employee if valid.
@@ -328,6 +333,5 @@ public class App
             return null;
         }
     }
-
 
 }
