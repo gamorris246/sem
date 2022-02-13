@@ -248,10 +248,9 @@ public class App{
             String strSelect =
                 "SELECT employees.emp_no, employees.first_name, employees.last_name, salaries.salary "
                     + "FROM employees, salaries, dept_emp, departments "
-                    + "WHERE employees.emp_no = salaries.emp_no "
+                    + "WHERE employees.dept = " + dept_name;
                     + "AND employees.emp_no = dept_emp.emp_no "
                     + "AND dept_emp.dept_no = departments.dept_no "
-                    + "AND salaries.to_date = '9999-01-01' "
                     + "AND departments.dept_no = '<dept_no>' "
                     + "ORDER BY employees.emp_no ASC ";
 
