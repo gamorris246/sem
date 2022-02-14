@@ -14,7 +14,7 @@ public class App{
         a.connect();
 
         /** Extract employee salary information for all employees */
-        // ArrayList<Employee> employees = a.getAllSalaries();
+        ArrayList<Employee> employees = a.getAllSalaries();
 
         /** Extract employee salary information based on role */
         //ArrayList<Employee> employees = a.getSalariesByRole();
@@ -22,11 +22,8 @@ public class App{
          /** Test the size of the returned data - should be 240124 */
          //System.out.println(employees.size());
 
-         /** Print all salaries for every employee */
-         //a.printSalaries(employees);
-
-        getDepartment("Sales");
-        //displayDepartment(dep);
+        /** Print all salaries for every employee */
+        a.printSalaries(employees);
 
 
          /** Disconnect from database */
@@ -237,100 +234,5 @@ public class App{
         }
     }
 
-
-    /** Gets employees based on department. */
-    public Department getDepartment(String dept_name){
-        try
-        {
-            // Create an SQL statement
-            Statement stmt = con.createStatement();
-            // Create string for SQL statement
-            String strSelect =
-                "SELECT employees.emp_no, employees.first_name, employees.last_name, salaries.salary "
-                    + "FROM employees, salaries, dept_emp, departments "
-                    + "WHERE employees.dept = " + dept_name;
-                    + "AND employees.emp_no = dept_emp.emp_no "
-                    + "AND dept_emp.dept_no = departments.dept_no "
-                    + "AND departments.dept_no = '<dept_no>' "
-                    + "ORDER BY employees.emp_no ASC ";
-
-            // Execute SQL statement
-            ResultSet rset = stmt.executeQuery(strSelect);
-            // Return new employee if valid.
-            // Check one is returned
-            if (rset.next())
-            {
-                Department dep = new Department();
-                Employee emp = new Employee();
-                emp.emp_no = rset.getInt("emp_no");
-                emp.first_name = rset.getString("first_name");
-                emp.last_name = rset.getString("last_name");
-                emp.salary = rset.getInt("salary");
-                return dep;
-            }
-            else
-                return null;
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-            System.out.println("Failed to get department details ");
-            return null;
-        }
-    }
-
-    /** Display department. */
-    public void displayDepartment(Department dep){
-        if (dep != null){
-            System.out.println(
-                    emp.emp_no + " "
-                            + emp.first_name + " "
-                            + emp.last_name + "\n"
-                            + emp.salary + "\n");
-        }
-    }
-
-
-    /**
-     * Gets Salaries based on department.
-     * @return A list of employees and salaries based on roles, or null if there is an error.
-     */
-    public ArrayList<Employee> getSalariesByDepartment(Department dept) {
-        try{
-            // Create an SQL statement
-            Statement stmt = con.createStatement();
-            // Create string for SQL statement
-            String strSelect =
-                 "SELECT employees.emp_no, employees.first_name, employees.last_name, salaries.salary "
-                    + "FROM employees, salaries, dept_emp, departments "
-                    + "WHERE employees.emp_no = salaries.emp_no "
-                    + "AND employees.emp_no = dept_emp.emp_no "
-                    + "AND dept_emp.dept_no = departments.dept_no "
-                    + "AND salaries.to_date = '9999-01-01' "
-                    + "AND departments.dept_no = '<dept_no>' "
-                    + "ORDER BY employees.emp_no ASC";
-
-            // Execute SQL statement
-            ResultSet rset = stmt.executeQuery(strSelect);
-            // Return new employee if valid.
-            // Check one is returned
-            if (rset.next())
-            {
-                Employee emp = new Employee();
-                emp.emp_no = rset.getInt("emp_no");
-                emp.first_name = rset.getString("first_name");
-                emp.last_name = rset.getString("last_name");
-                return emp;
-            }
-            else
-                return null;
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-            System.out.println("Failed to get employee details");
-            return null;
-        }
-    }
 
 }

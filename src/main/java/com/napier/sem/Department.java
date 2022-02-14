@@ -13,12 +13,3 @@ public class Department {
     public Employee manager;
 }
 
-/**
- * public Employee emp;
- *     public int emp_no;
- *     public String first_name;
- *     public String last_name;
- *     public int salary;
- */
-
-
