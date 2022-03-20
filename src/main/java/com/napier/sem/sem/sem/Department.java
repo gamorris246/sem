@@ -1,4 +1,4 @@
-package com.napier.sem;
+package com.napier.sem.sem.sem;
 
 /** Represents a Department */
 public class Department {

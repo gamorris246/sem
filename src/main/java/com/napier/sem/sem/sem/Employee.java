@@ -1,4 +1,4 @@
-package com.napier.sem;
+package com.napier.sem.sem.sem;
 
 /** Represents an employee */
 public class Employee
