@@ -26,6 +26,7 @@ public class App{
         // Disconnect from database
         a.disconnect();
     }
+
     /** Connection to MySQL database. */
     private Connection con = null;
 
